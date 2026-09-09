@@ -1,0 +1,210 @@
+/*
+ * Diseño pensado para personas mayores: fuentes grandes, mucho contraste,
+ * zonas táctiles amplias y nada de hover.
+ */
+
+:root {
+  color-scheme: light;
+
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --border: #d6d1c6;
+  --text: #16150f;
+  --text-soft: #55524a;
+  --accent: #1c4f9c;
+  --danger: #9c1c1c;
+
+  /* Escala tipográfica deliberadamente grande. */
+  --size-huge: 3.25rem;
+  --size-xl: 2rem;
+  --size-lg: 1.5rem;
+  --size-md: 1.25rem;
+  --size-sm: 1.0625rem;
+
+  --radius: 18px;
+  --tap: 64px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: var(--size-md);
+  line-height: 1.4;
+}
+
+.app {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: max(1rem, env(safe-area-inset-top)) 1rem
+    calc(2rem + env(safe-area-inset-bottom));
+}
+
+h1 {
+  font-size: var(--size-xl);
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+/* --- Tarjeta de la próxima recogida --------------------------------- */
+
+.next-card {
+  background: var(--surface);
+  border: 3px solid var(--text);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.next-card__eyebrow {
+  font-size: var(--size-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-soft);
+  margin: 0 0 0.75rem;
+}
+
+.next-card__icon {
+  font-size: 3.5rem;
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.next-card__label {
+  font-size: var(--size-huge);
+  font-weight: 800;
+  line-height: 1.05;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+
+.next-card__description {
+  font-size: var(--size-sm);
+  color: var(--text-soft);
+  margin: 0.25rem 0 0;
+}
+
+.next-card__fraction + .next-card__fraction {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 2px dashed var(--border);
+}
+
+.next-card__date {
+  font-size: var(--size-lg);
+  margin: 1.25rem 0 0;
+}
+
+.next-card__countdown {
+  font-size: var(--size-xl);
+  font-weight: 700;
+  margin: 0.25rem 0 0;
+  color: var(--accent);
+}
+
+/* --- Lista de próximas recogidas ------------------------------------ */
+
+.upcoming {
+  margin-top: 2rem;
+}
+
+.upcoming__title {
+  font-size: var(--size-lg);
+  margin: 0 0 0.75rem;
+}
+
+.upcoming__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.upcoming__item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  min-height: var(--tap);
+}
+
+.upcoming__item + .upcoming__item {
+  border-top: 2px solid var(--border);
+}
+
+.upcoming__date {
+  font-weight: 700;
+  min-width: 7.5rem;
+}
+
+.upcoming__types {
+  color: var(--text-soft);
+}
+
+/* --- Botones y enlaces ---------------------------------------------- */
+
+.big-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 5.5rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  background: var(--surface);
+  border: 3px solid var(--text);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: var(--size-xl);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.big-link__icon {
+  font-size: 2.5rem;
+}
+
+.big-link:active {
+  background: #ebe7dd;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  margin-top: 2rem;
+  color: var(--accent);
+  font-size: var(--size-md);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* --- Estados --------------------------------------------------------- */
+
+.notice {
+  background: var(--surface);
+  border: 3px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.25rem;
+  font-size: var(--size-lg);
+}
+
+.footnote {
+  margin-top: 2rem;
+  font-size: 0.9375rem;
+  color: var(--text-soft);
+  text-align: center;
+}
