@@ -20,7 +20,11 @@ Lo que **ya está hecho**:
 
 ## 2. Ejecutar el SQL
 
-En el **SQL Editor** de Supabase, ejecuta los cuatro ficheros de la carpeta
+Lo más fácil: abre `supabase/instalacion-completa.sql`, copia **todo** el contenido,
+pégalo en el **SQL Editor** de Supabase y pulsa **Run**. Ese fichero ya lleva los
+cuatro pasos en orden.
+
+Si lo prefieres por separado, ejecuta los cuatro ficheros de la carpeta
 `supabase/` **en este orden**:
 
 1. `schema.sql` — tablas

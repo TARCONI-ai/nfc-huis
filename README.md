@@ -71,4 +71,5 @@ Nunca se debe poner una `sb_secret_…` ni una `service_role` en el frontend.
 
 ## Puesta en marcha
 
-Ver [MANUAL_STEPS.md](MANUAL_STEPS.md).
+Ver [MANUAL_STEPS.md](MANUAL_STEPS.md). Para el SQL, lo más fácil es pegar
+[`supabase/instalacion-completa.sql`](supabase/instalacion-completa.sql) de una vez.
