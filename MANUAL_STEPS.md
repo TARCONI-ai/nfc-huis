@@ -3,22 +3,27 @@
 Todo lo que sigue lo tienes que hacer tú a mano: yo no puedo entrar en tu cuenta
 de Supabase ni grabar las pegatinas.
 
-Lo que **ya está hecho**:
+Lo que **ya está hecho** (9 de septiembre de 2026):
 
 - Repositorio público creado: <https://github.com/TARCONI-ai/nfc-huis>
 - GitHub Pages activado con GitHub Actions como origen
 - Web publicada en <https://tarconi-ai.github.io/nfc-huis/>
+- Proyecto Supabase creado y SQL ejecutado (pasos 1 y 2)
+- Variables configuradas en GitHub y web redesplegada (pasos 3 y 4)
+- Congelador funcionando con las 6 lades y los 32 productos
+
+**Sólo te queda el paso 6: grabar las pegatinas NFC.**
 
 ---
 
-## 1. Crear el proyecto de Supabase
+## 1. Crear el proyecto de Supabase ✅ hecho
 
 1. Entra en <https://supabase.com/dashboard> y crea un proyecto nuevo.
 2. Plan **Free**. No actives Pro, Custom Domain, PITR, IPv4 dedicado ni ningún add-on.
 3. Región: la más cercana (Frankfurt o Londres).
 4. Guarda la contraseña de la base de datos en tu gestor de contraseñas.
 
-## 2. Ejecutar el SQL
+## 2. Ejecutar el SQL ✅ hecho
 
 Lo más fácil: abre `supabase/instalacion-completa.sql`, copia **todo** el contenido,
 pégalo en el **SQL Editor** de Supabase y pulsa **Run**. Ese fichero ya lleva los
@@ -34,7 +39,7 @@ Si lo prefieres por separado, ejecuta los cuatro ficheros de la carpeta
 
 Los cuatro se pueden reejecutar sin duplicar datos.
 
-## 3. Copiar los datos de conexión
+## 3. Copiar los datos de conexión ✅ hecho
 
 En **Project Settings → API Keys**, copia:
 
@@ -43,7 +48,7 @@ En **Project Settings → API Keys**, copia:
 
 ⚠️ La **Secret key** (`sb_secret_…`) no se copia a ningún sitio de este proyecto.
 
-## 4. Configurar GitHub
+## 4. Configurar GitHub ✅ hecho
 
 En el repositorio: **Settings → Secrets and variables → Actions → Variables →
 New repository variable**. Crea estas dos *variables* (no secretos: acaban dentro
