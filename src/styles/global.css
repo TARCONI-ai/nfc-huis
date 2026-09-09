@@ -208,3 +208,391 @@ h1 {
   color: var(--text-soft);
   text-align: center;
 }
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #fdf0d5;
+  border: 2px solid #b98a1a;
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.banner p {
+  margin: 0;
+  font-size: var(--size-sm);
+}
+
+/* --- Congelador: cabecera y panel de ajustes ------------------------- */
+
+.page-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page-head h1 {
+  margin-bottom: 1.25rem;
+}
+
+.icon-btn {
+  flex: none;
+  width: var(--tap);
+  height: var(--tap);
+  margin-bottom: 1.25rem;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  color: var(--text-soft);
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.icon-btn[aria-pressed='true'] {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--surface);
+}
+
+.manage {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.manage__actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.manage__actions .btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0 0.5rem;
+  font-size: var(--size-sm);
+}
+
+.manage__hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--text-soft);
+}
+
+/* --- Congelador: cajones y productos -------------------------------- */
+
+.drawer {
+  margin-bottom: 2rem;
+}
+
+.drawer__title {
+  font-size: var(--size-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 0.75rem;
+}
+
+.drawer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.drawer__empty {
+  margin: 0;
+  padding: 1rem 1.125rem;
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-soft);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.625rem;
+  padding: 0.75rem 0.625rem 0.75rem 1rem;
+  min-height: 5rem;
+}
+
+.item + .item {
+  border-top: 2px solid var(--border);
+}
+
+.item__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.item__name {
+  font-size: var(--size-md);
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+
+.item__name--button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: left;
+  text-decoration: underline;
+}
+
+.item__notes {
+  font-size: 0.9375rem;
+  color: var(--text-soft);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex: none;
+}
+
+.stepper__btn {
+  width: 52px;
+  height: 52px;
+  background: var(--surface);
+  border: 3px solid var(--text);
+  border-radius: 14px;
+  color: var(--text);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stepper__btn:active {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.stepper__btn:disabled {
+  opacity: 0.3;
+}
+
+.stepper__value {
+  min-width: 2.375rem;
+  text-align: center;
+  font-size: var(--size-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper__unit {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-soft);
+}
+
+.drawer__add {
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: 0.75rem;
+  background: transparent;
+  border: 2px dashed var(--text-soft);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: var(--size-md);
+  font-weight: 600;
+}
+
+/* --- Botones genéricos ---------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap);
+  padding: 0 1.25rem;
+  background: var(--surface);
+  border: 2px solid var(--text);
+  border-radius: 14px;
+  color: var(--text);
+  font-size: var(--size-md);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.btn--danger {
+  width: 100%;
+  margin-top: 1rem;
+  background: var(--surface);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+}
+
+/* --- Modal y formularios -------------------------------------------- */
+
+.modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(20 18 12 / 55%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem 1rem 0;
+}
+
+.modal {
+  width: 100%;
+  max-width: 34rem;
+  /* El formulario es más alto que un iPhone: que se desplace él, no el fondo. */
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 1.25rem 1.25rem calc(1.5rem + env(safe-area-inset-bottom));
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal__title {
+  font-size: var(--size-lg);
+  margin: 0;
+}
+
+.modal__close {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  background: none;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  font-size: 1.375rem;
+  color: var(--text);
+}
+
+.form__field {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.form__row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form__row .form__field {
+  flex: 1;
+  min-width: 0;
+}
+
+.form__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: var(--size-sm);
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.form__input {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 0 0.875rem;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  font: inherit;
+}
+
+.form__input:focus {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.form__problem {
+  margin: 0 0 1rem;
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.form__actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.form__actions .btn {
+  flex: 1;
+  min-width: 0;
+  padding: 0 0.5rem;
+}
+
+.confirm__text {
+  margin: 0 0 1.5rem;
+  font-size: var(--size-lg);
+}
+
+/* --- Historial ------------------------------------------------------- */
+
+.history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.history__row {
+  display: flex;
+  gap: 0.875rem;
+  padding: 0.875rem 1.125rem;
+  font-size: var(--size-sm);
+}
+
+.history__row + .history__row {
+  border-top: 2px solid var(--border);
+}
+
+.history__when {
+  flex: none;
+  width: 6.5rem;
+  color: var(--text-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.history__what {
+  display: flex;
+  flex-direction: column;
+}
+
+.history__action {
+  color: var(--text-soft);
+}
