@@ -14,6 +14,12 @@ import type { WasteScheduleEntry } from '../types/waste';
 
 const UPCOMING_COUNT = 4;
 
+/** webcal://.../afval.ics — funciona con cualquier dominio de despliegue. */
+function afvalWebcalUrl(): string {
+  const icsUrl = `${window.location.origin}${import.meta.env.BASE_URL}afval.ics`;
+  return icsUrl.replace(/^https?:/, 'webcal:');
+}
+
 export default function WastePage() {
   // Se calcula una vez al abrir la página: al tocar la NFC siempre es un montaje nuevo.
   const { next, upcoming, consultedAt } = useMemo(() => {
@@ -76,6 +82,13 @@ export default function WastePage() {
           <p>Vraag Jasper om de nieuwe kalender toe te voegen.</p>
         </section>
       )}
+
+      <a className="big-link" href={afvalWebcalUrl()}>
+        <span className="big-link__icon" aria-hidden="true">
+          📅
+        </span>
+        Herinnering in kalender
+      </a>
 
       <p className="footnote">Bijgewerkt: {consultedAt}</p>
 

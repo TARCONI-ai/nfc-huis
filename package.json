@@ -4,7 +4,10 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
+    "generate:ics": "vite-node scripts/generate-ics.ts",
+    "predev": "npm run generate:ics",
     "dev": "vite",
+    "prebuild": "npm run generate:ics",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
@@ -22,6 +25,7 @@
     "@vitejs/plugin-react": "^4.3.2",
     "typescript": "^5.6.3",
     "vite": "^5.4.9",
+    "vite-node": "^2.1.9",
     "vitest": "^2.1.3"
   }
 }
