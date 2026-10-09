@@ -25,22 +25,28 @@ export default function FreezerPage() {
   } = useFreezer();
 
   const [manage, setManage] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [query, setQuery] = useState('');
   const [addingTo, setAddingTo] = useState<string | null>(null);
   const [editing, setEditing] = useState<FreezerItem | null>(null);
   const [emptied, setEmptied] = useState<FreezerItem | null>(null);
   const [exporting, setExporting] = useState(false);
 
-  const grouped = useMemo(
-    () =>
-      locations.map((location) => ({
-        location,
-        items: items.filter(
-          (item) => item.location_id === location.id && matchesQuery(item.name, query),
-        ),
-      })),
-    [locations, items, query],
-  );
+  const grouped = useMemo(() => {
+    const all = locations.map((location) => ({
+      location,
+      items: items.filter(
+        (item) => item.location_id === location.id && matchesQuery(item.name, query),
+      ),
+    }));
+    // Buscando, sólo enseñamos los cajones donde está el producto: así no hay que hacer scroll.
+    return query.trim() ? all.filter((group) => group.items.length > 0) : all;
+  }, [locations, items, query]);
+
+  function toggleSearch() {
+    if (searching) setQuery('');
+    setSearching((current) => !current);
+  }
 
   if (!isSupabaseConfigured) {
     return (
@@ -78,27 +84,55 @@ export default function FreezerPage() {
     <main className="app">
       <div className="page-head">
         <h1>❄️ Vriezer</h1>
-        <button
-          type="button"
-          className="icon-btn"
-          aria-label={manage ? 'Beheer sluiten' : 'Beheer openen'}
-          aria-pressed={manage}
-          onClick={() => setManage((current) => !current)}
-        >
-          ⚙︎
-        </button>
+        <div className="page-head__buttons">
+          <button
+            type="button"
+            className="icon-btn"
+            aria-label={searching ? 'Zoeken sluiten' : 'Zoeken'}
+            aria-pressed={searching}
+            onClick={toggleSearch}
+          >
+            🔍
+          </button>
+          <button
+            type="button"
+            className="icon-btn"
+            aria-label={manage ? 'Beheer sluiten' : 'Beheer openen'}
+            aria-pressed={manage}
+            onClick={() => setManage((current) => !current)}
+          >
+            ⚙︎
+          </button>
+        </div>
       </div>
 
-      {manage && (
-        <section className="manage">
+      {searching && (
+        <div className="search">
           <input
-            className="form__input"
+            className="form__input search__input"
             type="search"
-            placeholder="Zoek een product…"
+            placeholder="Wat zoekt u?"
+            aria-label="Zoek een product"
+            autoFocus
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
-          <div className="manage__actions">
+          {query && (
+            <button
+              type="button"
+              className="search__clear"
+              aria-label="Zoekwoord wissen"
+              onClick={() => setQuery('')}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
+      {manage && (
+        <section className="manage">
+          <div className="manage__actions manage__actions--first">
             <Link className="btn" to="/vriezer/geschiedenis">
               Geschiedenis
             </Link>
@@ -136,13 +170,17 @@ export default function FreezerPage() {
         </section>
       )}
 
+      {!loading && !loadError && query.trim() && grouped.length === 0 && (
+        <p className="notice">Niets gevonden voor “{query.trim()}”.</p>
+      )}
+
       {!loading && !loadError &&
         grouped.map(({ location, items: locationItems }) => (
           <section className="drawer" key={location.id}>
             <h2 className="drawer__title">{location.name}</h2>
 
             {locationItems.length === 0 ? (
-              <p className="drawer__empty">{query ? 'Niets gevonden' : 'Leeg'}</p>
+              <p className="drawer__empty">Leeg</p>
             ) : (
               <ul className="drawer__list">
                 {locationItems.map((item) => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { clampQuantity, classifyError, isValidName } from './freezer-rules';
+import { clampQuantity, classifyError, isValidName, shoppingList } from './freezer-rules';
 import { matchesQuery, normalize } from './text';
 
 describe('cantidades', () => {
@@ -62,5 +62,22 @@ describe('clasificación de errores', () => {
 
   it('el resto son errores de servidor', () => {
     expect(classifyError('duplicate key value violates unique constraint')).toBe('server');
+  });
+});
+
+describe('lista de la compra', () => {
+  const item = (name: string, location_id: string, quantity: number) => ({ name, location_id, quantity });
+
+  it('sólo incluye los productos a 0', () => {
+    const lista = shoppingList([item('Brood', 'a', 0), item('Erwten', 'a', 2)], ['a']);
+    expect(lista.map((it) => it.name)).toEqual(['Brood']);
+  });
+
+  it('ordena por cajón y después por nombre', () => {
+    const lista = shoppingList(
+      [item('Vis', 'b', 0), item('IJs', 'a', 0), item('Brood', 'b', 0)],
+      ['a', 'b'],
+    );
+    expect(lista.map((it) => it.name)).toEqual(['IJs', 'Brood', 'Vis']);
   });
 });

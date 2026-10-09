@@ -18,6 +18,13 @@ export default function HomePage() {
         </span>
         Vriezer
       </Link>
+
+      <Link className="big-link" to="/boodschappen">
+        <span className="big-link__icon" aria-hidden="true">
+          🛒
+        </span>
+        Boodschappen
+      </Link>
     </main>
   );
 }
