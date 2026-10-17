@@ -12,7 +12,14 @@ Lo que **ya está hecho** (9 de septiembre de 2026):
 - Variables configuradas en GitHub y web redesplegada (pasos 3 y 4)
 - Congelador funcionando con las 6 lades y los 32 productos
 
-**Sólo te queda el paso 6: grabar las pegatinas NFC.**
+**Pendiente:**
+
+- **Paso 2b — Voorraden (despensa):** abre `supabase/voorraden.sql`, copia todo,
+  pégalo en el **SQL Editor** de Supabase y pulsa **Run**. Crea las tablas
+  `pantry_locations` y `pantry_items` con los 22 sitios y los 183 productos del
+  Excel `VOORRADEN.xlsx`. Se puede reejecutar: no duplica productos.
+  Hasta que no lo ejecutes, la página Voorraden dirá que no está bereikbaar.
+- **Paso 6:** grabar las pegatinas NFC.
 
 ---
 
@@ -78,6 +85,7 @@ Con NFC Tools (iOS/Android), escribe un registro **URL** en cada pegatina:
 |---|---|
 | Basura | `https://tarconi-ai.github.io/nfc-huis/#/afval` |
 | Congelador | `https://tarconi-ai.github.io/nfc-huis/#/vriezer` |
+| Despensa (garaje) | `https://tarconi-ai.github.io/nfc-huis/#/voorraden` |
 
 Marca las pegatinas como **sólo lectura** al final, para que nadie las
 reescriba sin querer.

@@ -1,34 +1,46 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import * as api from '../services/freezer';
-import { FreezerError } from '../services/freezer';
+import type { InventoryApi, InventoryError } from '../services/inventory';
+import { freezerApi } from '../services/freezer';
+import { pantryApi } from '../services/pantry';
 import type { FreezerItem, FreezerItemDraft, FreezerLocation } from '../types/freezer';
+import type { PantryItem, PantryItemDraft, PantryLocation } from '../types/pantry';
 
 /** Al volver a la pestaña sólo refrescamos si los datos ya están algo viejos. */
 const STALE_AFTER_MS = 30_000;
 
-export interface FreezerState {
-  locations: FreezerLocation[];
-  items: FreezerItem[];
+interface BaseItem {
+  id: string;
+  name: string;
+  quantity: number;
+}
+
+export interface InventoryState<TLocation, TItem, TDraft> {
+  locations: TLocation[];
+  items: TItem[];
   loading: boolean;
   /** Error de la carga inicial: la pantalla no puede mostrar nada. */
-  loadError: FreezerError | null;
+  loadError: InventoryError | null;
   /** Error de una mutación: los datos siguen en pantalla. */
-  actionError: FreezerError | null;
+  actionError: InventoryError | null;
   busyIds: ReadonlySet<string>;
   reload: () => Promise<void>;
   dismissActionError: () => void;
-  changeQuantity: (item: FreezerItem, delta: number) => Promise<void>;
-  addItem: (draft: FreezerItemDraft) => Promise<void>;
-  editItem: (id: string, patch: Partial<FreezerItemDraft>) => Promise<void>;
+  changeQuantity: (item: TItem, delta: number) => Promise<void>;
+  addItem: (draft: TDraft) => Promise<void>;
+  editItem: (id: string, patch: Partial<TDraft>) => Promise<void>;
   removeItem: (id: string) => Promise<void>;
 }
 
-export function useFreezer(): FreezerState {
-  const [locations, setLocations] = useState<FreezerLocation[]>([]);
-  const [items, setItems] = useState<FreezerItem[]>([]);
+const byName = <T extends BaseItem>(a: T, b: T) => a.name.localeCompare(b.name, 'nl');
+
+function useInventory<TLocation, TItem extends BaseItem, TDraft>(
+  api: InventoryApi<TLocation, TItem, TDraft>,
+): InventoryState<TLocation, TItem, TDraft> {
+  const [locations, setLocations] = useState<TLocation[]>([]);
+  const [items, setItems] = useState<TItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState<FreezerError | null>(null);
-  const [actionError, setActionError] = useState<FreezerError | null>(null);
+  const [loadError, setLoadError] = useState<InventoryError | null>(null);
+  const [actionError, setActionError] = useState<InventoryError | null>(null);
   const [busyIds, setBusyIds] = useState<ReadonlySet<string>>(new Set());
 
   const loadedAt = useRef(0);
@@ -47,12 +59,12 @@ export function useFreezer(): FreezerState {
       loadedAt.current = Date.now();
     } catch (error) {
       // Un fallo de red no debe vaciar un inventario ya visible.
-      if (!hasData.current) setLoadError(error as FreezerError);
-      else setActionError(error as FreezerError);
+      if (!hasData.current) setLoadError(error as InventoryError);
+      else setActionError(error as InventoryError);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [api]);
 
   useEffect(() => {
     void reload();
@@ -79,7 +91,7 @@ export function useFreezer(): FreezerState {
       await action();
       setActionError(null);
     } catch (error) {
-      setActionError(error as FreezerError);
+      setActionError(error as InventoryError);
       await reload(); // volvemos al estado real del servidor
     } finally {
       setBusyIds((current) => {
@@ -91,7 +103,7 @@ export function useFreezer(): FreezerState {
   }, [reload]);
 
   const changeQuantity = useCallback(
-    async (item: FreezerItem, delta: number) => {
+    async (item: TItem, delta: number) => {
       const quantity = Math.max(0, item.quantity + delta);
       if (quantity === item.quantity) return;
 
@@ -105,35 +117,31 @@ export function useFreezer(): FreezerState {
         loadedAt.current = Date.now();
       });
     },
-    [withBusy],
+    [api, withBusy],
   );
 
   const addItem = useCallback(
-    async (draft: FreezerItemDraft) => {
+    async (draft: TDraft) => {
       await withBusy('new', async () => {
         const saved = await api.createItem(draft);
-        setItems((current) =>
-          [...current, saved].sort((a, b) => a.name.localeCompare(b.name, 'nl')),
-        );
+        setItems((current) => [...current, saved].sort(byName));
         loadedAt.current = Date.now();
       });
     },
-    [withBusy],
+    [api, withBusy],
   );
 
   const editItem = useCallback(
-    async (id: string, patch: Partial<FreezerItemDraft>) => {
+    async (id: string, patch: Partial<TDraft>) => {
       await withBusy(id, async () => {
         const saved = await api.updateItem(id, patch);
         setItems((current) =>
-          current
-            .map((it) => (it.id === saved.id ? saved : it))
-            .sort((a, b) => a.name.localeCompare(b.name, 'nl')),
+          current.map((it) => (it.id === saved.id ? saved : it)).sort(byName),
         );
         loadedAt.current = Date.now();
       });
     },
-    [withBusy],
+    [api, withBusy],
   );
 
   const removeItem = useCallback(
@@ -144,7 +152,7 @@ export function useFreezer(): FreezerState {
         loadedAt.current = Date.now();
       });
     },
-    [withBusy],
+    [api, withBusy],
   );
 
   return {
@@ -161,4 +169,15 @@ export function useFreezer(): FreezerState {
     editItem,
     removeItem,
   };
+}
+
+export type FreezerState = InventoryState<FreezerLocation, FreezerItem, FreezerItemDraft>;
+export type PantryState = InventoryState<PantryLocation, PantryItem, PantryItemDraft>;
+
+export function useFreezer(): FreezerState {
+  return useInventory(freezerApi);
+}
+
+export function usePantry(): PantryState {
+  return useInventory(pantryApi);
 }

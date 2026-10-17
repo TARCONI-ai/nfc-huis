@@ -238,6 +238,8 @@ h1 {
 
 .page-head h1 {
   margin-bottom: 1.25rem;
+  /* Encoge en móviles estrechos para que "📦 Voorraden" quepa junto a los botones. */
+  font-size: clamp(1.5rem, 7.5vw, var(--size-xl));
 }
 
 .icon-btn {
@@ -679,4 +681,172 @@ h1 {
   margin: 0 0 1rem;
   font-size: var(--size-sm);
   text-align: left;
+}
+
+/* --- Pestañas: por sitio / por prioridad ----------------------------- */
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.375rem;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.tabs__tab {
+  flex: 1;
+  white-space: nowrap;
+  min-width: 0;
+  min-height: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  background: none;
+  border: none;
+  border-radius: 12px;
+  color: var(--text);
+  font: inherit;
+  font-size: var(--size-sm);
+  font-weight: 700;
+}
+
+.tabs__tab[aria-selected='true'] {
+  background: var(--text);
+  color: var(--surface);
+}
+
+.tabs__count {
+  min-width: 1.75rem;
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 0.9375rem;
+  line-height: 1.75rem;
+}
+
+/* --- Voorraden: zonas y etiquetas del garaje ------------------------- */
+
+.zone-title {
+  font-size: var(--size-xl);
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 3px solid var(--text);
+}
+
+.zone-title:first-of-type {
+  margin-top: 0.5rem;
+}
+
+.drawer__code {
+  display: inline-block;
+  margin-left: 0.625rem;
+  padding: 0.125rem 0.5rem;
+  border: 2px solid var(--text-soft);
+  border-radius: 8px;
+  color: var(--text-soft);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  vertical-align: middle;
+}
+
+.drawer__hint {
+  margin: -0.5rem 0 0.75rem;
+  font-size: var(--size-sm);
+  color: var(--text-soft);
+}
+
+/* --- Prioridad según caducidad ---------------------------------------- */
+
+/* En la vista de prioridad el sitio va en su propia línea, a todo el ancho. */
+.item--with-where {
+  flex-wrap: wrap;
+}
+
+.item__where {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+  border-radius: 10px;
+  font-size: var(--size-sm);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.item__where-code {
+  display: inline-block;
+  margin-left: 0.5rem;
+  color: var(--text-soft);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge {
+  align-self: flex-start;
+  margin-top: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.badge--weggooien {
+  background: var(--danger);
+  color: #fff;
+}
+
+.badge--verlopen {
+  background: #fdf0d5;
+  border: 2px solid #b98a1a;
+  color: #6b4d00;
+}
+
+.badge--nu {
+  background: #fde2e2;
+  color: var(--danger);
+}
+
+.badge--binnenkort {
+  background: #fdebd5;
+  color: #8a4a00;
+}
+
+.item--weggooien {
+  background: #fbeaea;
+}
+
+.item__warning {
+  font-size: var(--size-sm);
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.priority-title--weggooien {
+  color: var(--danger);
+}
+
+/* --- Formulario: fecha opcional --------------------------------------- */
+
+.form__hint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.9375rem;
+  color: var(--text-soft);
+}
+
+.form__link {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font: inherit;
+  font-size: 0.9375rem;
+  text-decoration: underline;
 }

@@ -66,11 +66,21 @@ describe('clasificación de errores', () => {
 });
 
 describe('lista de la compra', () => {
-  const item = (name: string, location_id: string, quantity: number) => ({ name, location_id, quantity });
+  const item = (name: string, location_id: string, quantity: number, unit = 'st') => ({
+    name,
+    location_id,
+    quantity,
+    unit,
+  });
 
   it('sólo incluye los productos a 0', () => {
     const lista = shoppingList([item('Brood', 'a', 0), item('Erwten', 'a', 2)], ['a']);
     expect(lista.map((it) => it.name)).toEqual(['Brood']);
+  });
+
+  it('no incluye los cubos de reciclaje (AFVAL)', () => {
+    const lista = shoppingList([item('Afval oud papier', 'a', 0, 'AFVAL'), item('Suiker', 'a', 0)], ['a']);
+    expect(lista.map((it) => it.name)).toEqual(['Suiker']);
   });
 
   it('ordena por cajón y después por nombre', () => {

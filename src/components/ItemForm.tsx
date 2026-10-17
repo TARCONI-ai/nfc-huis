@@ -1,12 +1,29 @@
 import { useState, type FormEvent } from 'react';
-import type { FreezerItem, FreezerItemDraft, FreezerLocation } from '../types/freezer';
+import type { FreezerItemDraft } from '../types/freezer';
 import { todayInAmsterdam } from '../lib/dates';
 import { clampQuantity, isValidName } from '../lib/freezer-rules';
 
-interface ItemFormProps {
-  locations: FreezerLocation[];
+/** Lo que el formulario necesita de un producto, sea del vriezer o de la voorraad. */
+interface EditableItem {
+  location_id: string;
+  name: string;
+  quantity: number;
+  unit: string;
+  notes: string | null;
+  frozen_on?: string | null;
+  best_before: string | null;
+}
+
+interface ItemFormProps<L extends { id: string }> {
+  locations: L[];
+  /** Texto de cada opción del desplegable de sitio. */
+  locationLabel: (location: L) => string;
+  /** "Lade" en el congelador, "Plek" en la despensa. */
+  locationFieldLabel?: string;
+  /** La fecha de congelación sólo tiene sentido en el vriezer. */
+  showFrozenOn?: boolean;
   /** Si viene, el formulario edita; si no, crea. */
-  item?: FreezerItem;
+  item?: EditableItem;
   defaultLocationId?: string;
   submitLabel: string;
   onSubmit: (draft: FreezerItemDraft) => Promise<void>;
@@ -14,15 +31,18 @@ interface ItemFormProps {
   onDelete?: () => void;
 }
 
-export default function ItemForm({
+export default function ItemForm<L extends { id: string }>({
   locations,
+  locationLabel,
+  locationFieldLabel = 'Lade',
+  showFrozenOn = false,
   item,
   defaultLocationId,
   submitLabel,
   onSubmit,
   onCancel,
   onDelete,
-}: ItemFormProps) {
+}: ItemFormProps<L>) {
   const [name, setName] = useState(item?.name ?? '');
   const [quantity, setQuantity] = useState(String(item?.quantity ?? 1));
   const [unit, setUnit] = useState(item?.unit ?? 'st');
@@ -30,7 +50,7 @@ export default function ItemForm({
     item?.location_id ?? defaultLocationId ?? locations[0]?.id ?? '',
   );
   const [frozenOn, setFrozenOn] = useState(
-    item ? (item.frozen_on ?? '') : todayInAmsterdam(),
+    item ? (item.frozen_on ?? '') : showFrozenOn ? todayInAmsterdam() : '',
   );
   const [bestBefore, setBestBefore] = useState(item?.best_before ?? '');
   const [notes, setNotes] = useState(item?.notes ?? '');
@@ -51,7 +71,7 @@ export default function ItemForm({
       return;
     }
     if (locationId === '') {
-      setProblem('Kies een lade.');
+      setProblem(`Kies een ${locationFieldLabel.toLowerCase()}.`);
       return;
     }
 
@@ -109,7 +129,7 @@ export default function ItemForm({
       </div>
 
       <label className="form__field">
-        <span className="form__label">Lade</span>
+        <span className="form__label">{locationFieldLabel}</span>
         <select
           className="form__input"
           value={locationId}
@@ -117,32 +137,43 @@ export default function ItemForm({
         >
           {locations.map((location) => (
             <option key={location.id} value={location.id}>
-              {location.name}
+              {locationLabel(location)}
             </option>
           ))}
         </select>
       </label>
 
       {/* Los campos de fecha van uno por línea: dos date inputs no caben a 375 px. */}
-      <label className="form__field">
-        <span className="form__label">Ingevroren op</span>
-        <input
-          className="form__input"
-          type="date"
-          value={frozenOn}
-          onChange={(event) => setFrozenOn(event.target.value)}
-        />
-      </label>
+      {showFrozenOn && (
+        <label className="form__field">
+          <span className="form__label">Ingevroren op</span>
+          <input
+            className="form__input"
+            type="date"
+            value={frozenOn}
+            onChange={(event) => setFrozenOn(event.target.value)}
+          />
+        </label>
+      )}
 
-      <label className="form__field">
-        <span className="form__label">Houdbaar tot</span>
-        <input
-          className="form__input"
-          type="date"
-          value={bestBefore}
-          onChange={(event) => setBestBefore(event.target.value)}
-        />
-      </label>
+      <div className="form__field">
+        <label>
+          <span className="form__label">Houdbaar tot (THT)</span>
+          <input
+            className="form__input"
+            type="date"
+            value={bestBefore}
+            onChange={(event) => setBestBefore(event.target.value)}
+          />
+        </label>
+        {bestBefore ? (
+          <button type="button" className="form__link" onClick={() => setBestBefore('')}>
+            Geen datum (niet bederfelijk)
+          </button>
+        ) : (
+          <span className="form__hint">Leeg laten als het niet bederft.</span>
+        )}
+      </div>
 
       <label className="form__field">
         <span className="form__label">Notitie</span>
