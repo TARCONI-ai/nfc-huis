@@ -456,6 +456,7 @@ h1 {
 .modal__backdrop {
   position: fixed;
   inset: 0;
+  z-index: 20; /* por encima del botón flotante de subir */
   background: rgb(20 18 12 / 55%);
   display: flex;
   align-items: flex-end;
@@ -860,4 +861,33 @@ h1 {
 
 .title-link:active {
   opacity: 0.6;
+}
+
+/* --- Volver arriba del todo y botón flotante de subir ------------------ */
+
+.back-link--top {
+  margin: 0 0 0.25rem;
+  min-height: 52px;
+}
+
+.scroll-top {
+  position: fixed;
+  /* A la izquierda: a la derecha taparía los botones − / + de los productos. */
+  left: max(1rem, env(safe-area-inset-left));
+  bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  z-index: 10;
+  width: var(--tap);
+  height: var(--tap);
+  background: var(--text);
+  border: 3px solid var(--surface);
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgb(20 18 12 / 35%);
+  color: var(--surface);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.scroll-top:active {
+  transform: scale(0.94);
 }

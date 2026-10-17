@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import BackLink from '../components/BackLink';
 import PageTitle from '../components/PageTitle';
 import schedule from '../data/waste-schedule.json';
 import { WASTE_TYPES } from '../data/waste-types';
@@ -35,6 +35,7 @@ export default function WastePage() {
 
   return (
     <main className="app">
+      <BackLink to="/" label="Terug naar huis" top />
       <PageTitle>🗑 Volgende ophaling</PageTitle>
 
       {next ? (
@@ -93,9 +94,7 @@ export default function WastePage() {
 
       <p className="footnote">Bijgewerkt: {consultedAt}</p>
 
-      <Link className="back-link" to="/">
-        ← Terug naar huis
-      </Link>
+      <BackLink to="/" label="Terug naar huis" />
     </main>
   );
 }
