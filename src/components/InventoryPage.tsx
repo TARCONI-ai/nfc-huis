@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import Modal from './Modal';
+import PageTitle from './PageTitle';
 import ItemForm from './ItemForm';
 import ItemRow from './ItemRow';
 import type { InventoryState } from '../hooks/useInventory';
@@ -123,7 +124,7 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
   if (!isSupabaseConfigured) {
     return (
       <main className="app">
-        <h1>{title}</h1>
+        <PageTitle>{title}</PageTitle>
         <section className="notice">
           <p>{listName} is nog niet ingesteld.</p>
         </section>
@@ -167,7 +168,7 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
   return (
     <main className="app">
       <div className="page-head">
-        <h1>{title}</h1>
+        <PageTitle>{title}</PageTitle>
         <div className="page-head__buttons">
           <button
             type="button"

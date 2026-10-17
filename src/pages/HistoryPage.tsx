@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchEvents, fetchLocations } from '../services/freezer';
-import type { InventoryError } from '../services/inventory';
-import type { FreezerEvent, FreezerLocation } from '../types/freezer';
+import PageTitle from '../components/PageTitle';
+import type { InventoryApi, InventoryError } from '../services/inventory';
+import type { InventoryEvent } from '../types/inventory';
 
-const ACTION_LABELS: Record<FreezerEvent['action'], string> = {
+const ACTION_LABELS: Record<InventoryEvent['action'], string> = {
   create: 'Toegevoegd',
   increase: 'Erbij',
   decrease: 'Eruit',
@@ -23,14 +23,30 @@ function formatWhen(iso: string): string {
   }).format(new Date(iso));
 }
 
-export default function FreezerHistoryPage() {
-  const [events, setEvents] = useState<FreezerEvent[] | null>(null);
-  const [locations, setLocations] = useState<FreezerLocation[]>([]);
+interface HistoryPageProps<L extends { id: string }> {
+  /** "❄️ Geschiedenis" */
+  title: string;
+  api: Pick<InventoryApi<L, unknown, unknown>, 'fetchEvents' | 'fetchLocations'>;
+  locationLabel: (location: L) => string;
+  backTo: string;
+  backLabel: string;
+}
+
+/** Historial de movimientos, igual para el vriezer y para la voorraad. */
+export default function HistoryPage<L extends { id: string }>({
+  title,
+  api,
+  locationLabel,
+  backTo,
+  backLabel,
+}: HistoryPageProps<L>) {
+  const [events, setEvents] = useState<InventoryEvent[] | null>(null);
+  const [locations, setLocations] = useState<L[]>([]);
   const [error, setError] = useState<InventoryError | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    Promise.all([fetchEvents(), fetchLocations()])
+    Promise.all([api.fetchEvents(), api.fetchLocations()])
       .then(([nextEvents, nextLocations]) => {
         if (cancelled) return;
         setEvents(nextEvents);
@@ -42,16 +58,16 @@ export default function FreezerHistoryPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [api]);
 
   const locationName = useMemo(() => {
-    const byId = new Map(locations.map((location) => [location.id, location.name]));
+    const byId = new Map(locations.map((location) => [location.id, locationLabel(location)]));
     return (id: string | null) => (id ? (byId.get(id) ?? '') : '');
-  }, [locations]);
+  }, [locations, locationLabel]);
 
   return (
     <main className="app">
-      <h1>Geschiedenis</h1>
+      <PageTitle>{title}</PageTitle>
 
       {error && <p className="notice">De geschiedenis is nu niet bereikbaar.</p>}
       {!error && events === null && <p className="notice">Laden…</p>}
@@ -76,8 +92,8 @@ export default function FreezerHistoryPage() {
         </ul>
       )}
 
-      <Link className="back-link" to="/vriezer">
-        ← Terug naar de vriezer
+      <Link className="back-link" to={backTo}>
+        ← {backLabel}
       </Link>
     </main>
   );

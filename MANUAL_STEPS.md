@@ -19,6 +19,10 @@ Lo que **ya está hecho** (9 de septiembre de 2026):
   `pantry_locations` y `pantry_items` con los 22 sitios y los 183 productos del
   Excel `VOORRADEN.xlsx`. Se puede reejecutar: no duplica productos.
   Hasta que no lo ejecutes, la página Voorraden dirá que no está bereikbaar.
+- **Paso 2c — Geschiedenis van de voorraden:** pega `supabase/voorraden-geschiedenis.sql`
+  en el SQL Editor y pulsa **Run** (después del 2b). Crea `pantry_events` y el
+  trigger que apunta cada cambio de la despensa. Sin esto, la página
+  Voorraden → ⚙︎ → Geschiedenis dirá que no está bereikbaar.
 - **Paso 6:** grabar las pegatinas NFC.
 
 ---

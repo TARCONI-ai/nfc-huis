@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import PageTitle from '../components/PageTitle';
 import { useFreezer, usePantry } from '../hooks/useInventory';
 import { shoppingList } from '../lib/freezer-rules';
 import { isSupabaseConfigured } from '../lib/supabase';
@@ -50,7 +51,7 @@ export default function ShoppingPage() {
 
   return (
     <main className="app">
-      <h1>🛒 Boodschappen</h1>
+      <PageTitle>🛒 Boodschappen</PageTitle>
 
       {!isSupabaseConfigured && (
         <section className="notice">

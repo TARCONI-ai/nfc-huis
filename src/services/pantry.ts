@@ -5,4 +5,5 @@ export const pantryApi = createInventoryApi<PantryLocation, PantryItem, PantryIt
   locations: 'pantry_locations',
   locationColumns: 'id, code, zone, name, sort_order, active',
   items: 'pantry_items',
+  events: 'pantry_events',
 });

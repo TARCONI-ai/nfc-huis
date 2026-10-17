@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
+import PageTitle from '../components/PageTitle';
 
 export default function HomePage() {
   return (
     <main className="app">
-      <h1>🏠 Huis</h1>
+      <PageTitle>🏠 Huis</PageTitle>
 
       <Link className="big-link" to="/afval">
         <span className="big-link__icon" aria-hidden="true">

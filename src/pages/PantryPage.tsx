@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import InventoryPage from '../components/InventoryPage';
 import { usePantry } from '../hooks/useInventory';
 import { pantryLocationLabel } from '../types/pantry';
@@ -15,6 +16,11 @@ export default function PantryPage() {
       locationCode={(location) => location.code}
       locationZone={(location) => location.zone}
       locationFieldLabel="Plek"
+      manageActions={
+        <Link className="btn" to="/voorraden/geschiedenis">
+          Geschiedenis
+        </Link>
+      }
       // La fecha de congelación no existe en la despensa.
       toDraft={({ frozen_on, ...draft }) => draft}
     />

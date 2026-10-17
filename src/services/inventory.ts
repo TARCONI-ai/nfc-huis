@@ -1,5 +1,8 @@
 import { supabase } from '../lib/supabase';
 import { clampQuantity, classifyError } from '../lib/freezer-rules';
+import type { InventoryEvent } from '../types/inventory';
+
+const HISTORY_LIMIT = 100;
 
 /**
  * Acceso común a los dos inventarios (vriezer y voorraden): mismas columnas
@@ -56,12 +59,15 @@ export interface InventoryApi<TLocation, TItem, TDraft> {
   updateItem: (id: string, patch: Partial<TDraft>) => Promise<TItem>;
   setQuantity: (id: string, quantity: number) => Promise<TItem>;
   deleteItem: (id: string) => Promise<void>;
+  /** Últimos movimientos, el más reciente primero. */
+  fetchEvents: () => Promise<InventoryEvent[]>;
 }
 
 export function createInventoryApi<TLocation, TItem, TDraft extends object>(tables: {
   locations: string;
   locationColumns: string;
   items: string;
+  events: string;
 }): InventoryApi<TLocation, TItem, TDraft> {
   const updateItem = async (id: string, patch: Partial<TDraft>) => {
     const rows = await run<TItem[]>(
@@ -93,5 +99,15 @@ export function createInventoryApi<TLocation, TItem, TDraft extends object>(tabl
     deleteItem: async (id) => {
       await run(client().from(tables.items).delete().eq('id', id).select());
     },
+    fetchEvents: () =>
+      run<InventoryEvent[]>(
+        client()
+          .from(tables.events)
+          .select(
+            'id, item_id, item_name_snapshot, action, quantity_delta, from_location_id, to_location_id, created_at',
+          )
+          .order('created_at', { ascending: false })
+          .limit(HISTORY_LIMIT),
+      ),
   };
 }
