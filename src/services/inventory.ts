@@ -52,6 +52,15 @@ export async function run<T>(query: PromiseLike<{ data: unknown; error: unknown 
   }
 }
 
+/**
+ * Si otro móvil ya borró el producto, el UPDATE no falla: devuelve cero filas.
+ * Lo convertimos en error para que la lista se recargue en vez de romperse.
+ */
+export function firstRow<T>(rows: readonly T[]): T {
+  if (rows.length === 0) throw new InventoryError('server', 'el producto ya no existe');
+  return rows[0];
+}
+
 export interface InventoryApi<TLocation, TItem, TDraft> {
   fetchLocations: () => Promise<TLocation[]>;
   fetchItems: () => Promise<TItem[]>;
@@ -73,7 +82,7 @@ export function createInventoryApi<TLocation, TItem, TDraft extends object>(tabl
     const rows = await run<TItem[]>(
       client().from(tables.items).update(patch as Record<string, unknown>).eq('id', id).select(),
     );
-    return rows[0];
+    return firstRow(rows);
   };
 
   return {
@@ -90,7 +99,7 @@ export function createInventoryApi<TLocation, TItem, TDraft extends object>(tabl
       const rows = await run<TItem[]>(
         client().from(tables.items).insert(draft as Record<string, unknown>).select(),
       );
-      return rows[0];
+      return firstRow(rows);
     },
     updateItem,
     /** Nunca baja de 0: la restricción también existe en SQL, pero mejor no llegar. */
