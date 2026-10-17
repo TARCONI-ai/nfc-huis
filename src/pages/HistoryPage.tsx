@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import BackLink from '../components/BackLink';
 import PageTitle from '../components/PageTitle';
 import type { InventoryApi, InventoryError } from '../services/inventory';
 import type { InventoryEvent } from '../types/inventory';
@@ -67,6 +67,7 @@ export default function HistoryPage<L extends { id: string }>({
 
   return (
     <main className="app">
+      <BackLink to={backTo} label={backLabel} top />
       <PageTitle>{title}</PageTitle>
 
       {error && <p className="notice">De geschiedenis is nu niet bereikbaar.</p>}
@@ -92,9 +93,7 @@ export default function HistoryPage<L extends { id: string }>({
         </ul>
       )}
 
-      <Link className="back-link" to={backTo}>
-        ← {backLabel}
-      </Link>
+      <BackLink to={backTo} label={backLabel} />
     </main>
   );
 }

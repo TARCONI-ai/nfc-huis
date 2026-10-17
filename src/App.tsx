@@ -1,4 +1,5 @@
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { ScrollTopButton, ScrollToTopOnNavigate } from './components/ScrollHelpers';
 import HomePage from './pages/HomePage';
 import WastePage from './pages/WastePage';
 import FreezerPage from './pages/FreezerPage';
@@ -12,6 +13,8 @@ import { pantryLocationLabel } from './types/pantry';
 export default function App() {
   return (
     <HashRouter>
+      <ScrollToTopOnNavigate />
+      <ScrollTopButton />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/afval" element={<WastePage />} />

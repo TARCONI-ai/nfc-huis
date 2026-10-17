@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import BackLink from '../components/BackLink';
 import PageTitle from '../components/PageTitle';
 import { useFreezer, usePantry } from '../hooks/useInventory';
 import { shoppingList } from '../lib/freezer-rules';
@@ -51,6 +51,7 @@ export default function ShoppingPage() {
 
   return (
     <main className="app">
+      <BackLink to="/" label="Terug naar huis" top />
       <PageTitle>🛒 Boodschappen</PageTitle>
 
       {!isSupabaseConfigured && (
@@ -101,9 +102,7 @@ export default function ShoppingPage() {
         </>
       )}
 
-      <Link className="back-link" to="/">
-        ← Terug naar huis
-      </Link>
+      <BackLink to="/" label="Terug naar huis" />
     </main>
   );
 }

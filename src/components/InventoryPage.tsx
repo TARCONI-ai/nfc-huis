@@ -1,6 +1,6 @@
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
 import Modal from './Modal';
+import BackLink from './BackLink';
 import PageTitle from './PageTitle';
 import ItemForm from './ItemForm';
 import ItemRow from './ItemRow';
@@ -124,13 +124,12 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
   if (!isSupabaseConfigured) {
     return (
       <main className="app">
+        <BackLink to="/" label="Terug naar huis" top />
         <PageTitle>{title}</PageTitle>
         <section className="notice">
           <p>{listName} is nog niet ingesteld.</p>
         </section>
-        <Link className="back-link" to="/">
-          ← Terug naar huis
-        </Link>
+        <BackLink to="/" label="Terug naar huis" />
       </main>
     );
   }
@@ -167,6 +166,7 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
 
   return (
     <main className="app">
+      <BackLink to="/" label="Terug naar huis" top />
       <div className="page-head">
         <PageTitle>{title}</PageTitle>
         <div className="page-head__buttons">
@@ -332,9 +332,7 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
           );
         })}
 
-      <Link className="back-link" to="/">
-        ← Terug naar huis
-      </Link>
+      <BackLink to="/" label="Terug naar huis" />
 
       {addingTo && (
         <Modal title="Product toevoegen" onClose={() => setAddingTo(null)}>
