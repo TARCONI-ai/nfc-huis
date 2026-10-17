@@ -26,9 +26,10 @@ interface ItemFormProps<L extends { id: string }> {
   item?: EditableItem;
   defaultLocationId?: string;
   submitLabel: string;
-  onSubmit: (draft: FreezerItemDraft) => Promise<void>;
+  /** `false` = no se guardó: el formulario sigue abierto con lo escrito. */
+  onSubmit: (draft: FreezerItemDraft) => Promise<boolean>;
   onCancel: () => void;
-  onDelete?: () => void;
+  onDelete?: () => Promise<boolean>;
 }
 
 export default function ItemForm<L extends { id: string }>({
@@ -56,6 +57,7 @@ export default function ItemForm<L extends { id: string }>({
   const [notes, setNotes] = useState(item?.notes ?? '');
   const [saving, setSaving] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -78,7 +80,7 @@ export default function ItemForm<L extends { id: string }>({
     setProblem(null);
     setSaving(true);
     try {
-      await onSubmit({
+      const saved = await onSubmit({
         location_id: locationId,
         name: name.trim(),
         quantity: clampQuantity(parsedQuantity),
@@ -87,6 +89,18 @@ export default function ItemForm<L extends { id: string }>({
         frozen_on: frozenOn || null,
         best_before: bestBefore || null,
       });
+      if (!saved) setProblem('Opslaan is niet gelukt. Probeer het opnieuw.');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (!onDelete || saving) return;
+    setProblem(null);
+    setSaving(true);
+    try {
+      if (!(await onDelete())) setProblem('Verwijderen is niet gelukt. Probeer het opnieuw.');
     } finally {
       setSaving(false);
     }
@@ -195,11 +209,40 @@ export default function ItemForm<L extends { id: string }>({
         </button>
       </div>
 
-      {onDelete && (
-        <button type="button" className="btn btn--danger" onClick={onDelete} disabled={saving}>
-          Verwijderen
-        </button>
-      )}
+      {onDelete &&
+        (confirmingDelete ? (
+          // Sin deshacer desde la web: pedimos confirmación, como al llegar a 0.
+          <div>
+            <p className="confirm__text">Weet u het zeker?</p>
+            <div className="form__actions">
+              <button
+                type="button"
+                className="btn btn--danger"
+                onClick={() => void handleDelete()}
+                disabled={saving}
+              >
+                Ja, verwijderen
+              </button>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => setConfirmingDelete(false)}
+                disabled={saving}
+              >
+                Nee
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn--danger"
+            onClick={() => setConfirmingDelete(true)}
+            disabled={saving}
+          >
+            Verwijderen
+          </button>
+        ))}
     </form>
   );
 }

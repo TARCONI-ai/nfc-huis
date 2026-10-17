@@ -26,9 +26,10 @@ export interface InventoryState<TLocation, TItem, TDraft> {
   reload: () => Promise<void>;
   dismissActionError: () => void;
   changeQuantity: (item: TItem, delta: number) => Promise<void>;
-  addItem: (draft: TDraft) => Promise<void>;
-  editItem: (id: string, patch: Partial<TDraft>) => Promise<void>;
-  removeItem: (id: string) => Promise<void>;
+  /** Devuelven `false` si no se pudo guardar, para que el formulario siga abierto. */
+  addItem: (draft: TDraft) => Promise<boolean>;
+  editItem: (id: string, patch: Partial<TDraft>) => Promise<boolean>;
+  removeItem: (id: string) => Promise<boolean>;
 }
 
 const byName = <T extends BaseItem>(a: T, b: T) => a.name.localeCompare(b.name, 'nl');
@@ -90,9 +91,11 @@ function useInventory<TLocation, TItem extends BaseItem, TDraft>(
     try {
       await action();
       setActionError(null);
+      return true;
     } catch (error) {
       setActionError(error as InventoryError);
       await reload(); // volvemos al estado real del servidor
+      return false;
     } finally {
       setBusyIds((current) => {
         const next = new Set(current);
@@ -121,37 +124,34 @@ function useInventory<TLocation, TItem extends BaseItem, TDraft>(
   );
 
   const addItem = useCallback(
-    async (draft: TDraft) => {
-      await withBusy('new', async () => {
+    async (draft: TDraft) =>
+      withBusy('new', async () => {
         const saved = await api.createItem(draft);
         setItems((current) => [...current, saved].sort(byName));
         loadedAt.current = Date.now();
-      });
-    },
+      }),
     [api, withBusy],
   );
 
   const editItem = useCallback(
-    async (id: string, patch: Partial<TDraft>) => {
-      await withBusy(id, async () => {
+    async (id: string, patch: Partial<TDraft>) =>
+      withBusy(id, async () => {
         const saved = await api.updateItem(id, patch);
         setItems((current) =>
           current.map((it) => (it.id === saved.id ? saved : it)).sort(byName),
         );
         loadedAt.current = Date.now();
-      });
-    },
+      }),
     [api, withBusy],
   );
 
   const removeItem = useCallback(
-    async (id: string) => {
-      await withBusy(id, async () => {
+    async (id: string) =>
+      withBusy(id, async () => {
         await api.deleteItem(id);
         setItems((current) => current.filter((it) => it.id !== id));
         loadedAt.current = Date.now();
-      });
-    },
+      }),
     [api, withBusy],
   );
 
