@@ -53,6 +53,11 @@ function toIcsUtc(date: Date): string {
   );
 }
 
+/** RFC 5545: en los textos hay que escapar `\\`, `;`, `,` y los saltos de línea. */
+function escapeText(value: string): string {
+  return value.replace(/[\\;,]/g, (char) => `\\${char}`).replace(/\n/g, '\\n');
+}
+
 function addDays(iso: string, days: number): string {
   const [year, month, day] = iso.split('-').map(Number);
   const date = new Date(Date.UTC(year, month - 1, day));
@@ -78,11 +83,11 @@ const events = (schedule as WasteScheduleEntry[])
       `DTSTAMP:${dtstamp}`,
       `DTSTART;VALUE=DATE:${reminderDay.replaceAll('-', '')}`,
       `DTEND;VALUE=DATE:${entry.date.replaceAll('-', '')}`,
-      `SUMMARY:${summary}`,
-      `DESCRIPTION:${type.description}`,
+      `SUMMARY:${escapeText(summary)}`,
+      `DESCRIPTION:${escapeText(type.description)}`,
       'BEGIN:VALARM',
       'ACTION:DISPLAY',
-      `DESCRIPTION:${summary}`,
+      `DESCRIPTION:${escapeText(summary)}`,
       `TRIGGER;VALUE=DATE-TIME:${alarmTrigger}`,
       'END:VALARM',
       'END:VEVENT',

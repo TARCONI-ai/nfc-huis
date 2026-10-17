@@ -28,3 +28,15 @@ export function getUpcomingCollections(
 
   return [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
 }
+
+/** Con cuántos días de margen avisamos de que el calendario se acaba. */
+export const SCHEDULE_WARN_DAYS = 45;
+
+/** Última fecha del calendario (o null si está vacío), para avisar antes de quedarnos sin fechas. */
+export function lastCollectionDate(entries: readonly WasteScheduleEntry[]): string | null {
+  let last: string | null = null;
+  for (const entry of entries) {
+    if (isWasteTypeId(entry.type) && (last === null || entry.date > last)) last = entry.date;
+  }
+  return last;
+}

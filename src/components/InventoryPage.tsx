@@ -345,8 +345,9 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
             submitLabel="Toevoegen"
             onCancel={() => setAddingTo(null)}
             onSubmit={async (draft) => {
-              await addItem(toDraft(draft));
-              setAddingTo(null);
+              const saved = await addItem(toDraft(draft));
+              if (saved) setAddingTo(null);
+              return saved;
             }}
           />
         </Modal>
@@ -363,12 +364,14 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
             submitLabel="Opslaan"
             onCancel={() => setEditing(null)}
             onSubmit={async (draft) => {
-              await editItem(editing.id, toDraft(draft));
-              setEditing(null);
+              const saved = await editItem(editing.id, toDraft(draft));
+              if (saved) setEditing(null);
+              return saved;
             }}
             onDelete={async () => {
-              await removeItem(editing.id);
-              setEditing(null);
+              const removed = await removeItem(editing.id);
+              if (removed) setEditing(null);
+              return removed;
             }}
           />
         </Modal>
@@ -381,6 +384,7 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
             <button
               type="button"
               className="btn btn--danger"
+              disabled={busyIds.has(emptied.id)}
               onClick={async () => {
                 await removeItem(emptied.id);
                 setEmptied(null);
@@ -391,6 +395,7 @@ export default function InventoryPage<L extends BaseLocation, I extends BaseItem
             <button
               type="button"
               className="btn"
+              disabled={busyIds.has(emptied.id)}
               onClick={async () => {
                 await changeQuantity(emptied, -1);
                 setEmptied(null);

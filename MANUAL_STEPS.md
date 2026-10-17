@@ -38,7 +38,8 @@ Lo que **ya está hecho** (9 de septiembre de 2026):
 
 Lo más fácil: abre `supabase/instalacion-completa.sql`, copia **todo** el contenido,
 pégalo en el **SQL Editor** de Supabase y pulsa **Run**. Ese fichero ya lleva los
-cuatro pasos en orden.
+cuatro pasos del congelador en orden y, detrás, los de la despensa
+(`voorraden.sql` y `voorraden-geschiedenis.sql`).
 
 Si lo prefieres por separado, ejecuta los cuatro ficheros de la carpeta
 `supabase/` **en este orden**:
@@ -107,12 +108,15 @@ reescriba sin querer.
 
 **Cada final de año: actualizar el calendario de basura.**
 Edita `src/data/waste-schedule.json` con las fechas del nuevo calendario
-municipal y haz push a `main`. Se despliega solo. Si se acaban las fechas, la
-página avisa en vez de quedarse en blanco.
+municipal y haz push a `main`. Se despliega solo. Cuando quedan menos de 45 días,
+la página de Afval lo dice y un GitHub Action (`afval-kalender.yml`) abre un issue.
+Si GitHub te avisa de que ha desactivado ese workflow por inactividad, reactívalo
+en **Actions**. Si se acaban las fechas, la página avisa en vez de quedarse en blanco.
 
 **Cada pocos meses: exportar una copia.**
-En la página del congelador, botón ⚙︎ → **Exporteren**. Descarga un `.json` con
-todo el inventario. El plan gratuito de Supabase no tiene backups automáticos.
+En **Vriezer** y en **Voorraden**, botón ⚙︎ → **Exporteren**. Cada página descarga
+su `.json` (`vriezer-…` y `voorraden-…`) con los sitios, todos los productos y los
+últimos 100 movimientos. El plan gratuito de Supabase no tiene backups automáticos.
 
 **Si el congelador deja de cargar.**
 Supabase pausa los proyectos Free tras ~7 días sin actividad. No cuesta dinero:

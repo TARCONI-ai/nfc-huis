@@ -75,7 +75,7 @@ Para renombrar el repositorio hay que cambiar `BASE` en
 
 ## Modelo de seguridad
 
-**El congelador es de acceso público. Es una decisión consciente, no un olvido.**
+**El congelador y la despensa son de acceso público. Es una decisión consciente, no un olvido.**
 
 No hay login: cualquiera que abra la URL puede leer y modificar el inventario.
 Se aceptó a cambio de que mis abuelos no vean nunca una pantalla de inicio de
