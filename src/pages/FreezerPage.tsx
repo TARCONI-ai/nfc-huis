@@ -1,21 +1,11 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ExportButton from '../components/ExportButton';
 import InventoryPage from '../components/InventoryPage';
 import { useFreezer } from '../hooks/useInventory';
-import { exportInventory } from '../services/export';
+import { freezerApi } from '../services/freezer';
 
 export default function FreezerPage() {
   const state = useFreezer();
-  const [exporting, setExporting] = useState(false);
-
-  async function handleExport() {
-    setExporting(true);
-    try {
-      await exportInventory();
-    } finally {
-      setExporting(false);
-    }
-  }
 
   return (
     <InventoryPage
@@ -31,9 +21,7 @@ export default function FreezerPage() {
           <Link className="btn" to="/vriezer/geschiedenis">
             Geschiedenis
           </Link>
-          <button type="button" className="btn" onClick={handleExport} disabled={exporting}>
-            {exporting ? 'Bezig…' : 'Exporteren'}
-          </button>
+          <ExportButton api={freezerApi} prefix="vriezer" />
         </>
       }
     />

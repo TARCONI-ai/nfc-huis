@@ -38,7 +38,8 @@ Lo que **ya está hecho** (9 de septiembre de 2026):
 
 Lo más fácil: abre `supabase/instalacion-completa.sql`, copia **todo** el contenido,
 pégalo en el **SQL Editor** de Supabase y pulsa **Run**. Ese fichero ya lleva los
-cuatro pasos en orden.
+cuatro pasos del congelador en orden y, detrás, los de la despensa
+(`voorraden.sql` y `voorraden-geschiedenis.sql`).
 
 Si lo prefieres por separado, ejecuta los cuatro ficheros de la carpeta
 `supabase/` **en este orden**:
@@ -111,8 +112,9 @@ municipal y haz push a `main`. Se despliega solo. Si se acaban las fechas, la
 página avisa en vez de quedarse en blanco.
 
 **Cada pocos meses: exportar una copia.**
-En la página del congelador, botón ⚙︎ → **Exporteren**. Descarga un `.json` con
-todo el inventario. El plan gratuito de Supabase no tiene backups automáticos.
+En **Vriezer** y en **Voorraden**, botón ⚙︎ → **Exporteren**. Cada página descarga
+su `.json` (`vriezer-…` y `voorraden-…`) con los sitios, todos los productos y los
+últimos 100 movimientos. El plan gratuito de Supabase no tiene backups automáticos.
 
 **Si el congelador deja de cargar.**
 Supabase pausa los proyectos Free tras ~7 días sin actividad. No cuesta dinero:
