@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getUpcomingCollections } from './waste';
+import { getUpcomingCollections, lastCollectionDate } from './waste';
 import { daysBetween, formatDutchDate, relativeDayLabel, todayInAmsterdam } from './dates';
 import type { WasteScheduleEntry } from '../types/waste';
 import schedule from '../data/waste-schedule.json';
@@ -60,6 +60,19 @@ describe('getUpcomingCollections', () => {
   it('devuelve lista vacía cuando se acaba el calendario', () => {
     const result = getUpcomingCollections(entries(['2026-09-11', 'pmd']), '2027-01-01');
     expect(result).toEqual([]);
+  });
+});
+
+describe('lastCollectionDate', () => {
+  it('devuelve la última fecha aunque el JSON venga desordenado', () => {
+    expect(
+      lastCollectionDate(entries(['2026-12-22', 'gft'], ['2026-09-01', 'pmd'], ['2026-10-19', 'papier'])),
+    ).toBe('2026-12-22');
+  });
+
+  it('ignora los tipos desconocidos y el calendario vacío', () => {
+    expect(lastCollectionDate(entries(['2027-01-05', 'restafval'], ['2026-12-22', 'gft']))).toBe('2026-12-22');
+    expect(lastCollectionDate([])).toBeNull();
   });
 });
 

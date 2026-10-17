@@ -108,8 +108,10 @@ reescriba sin querer.
 
 **Cada final de año: actualizar el calendario de basura.**
 Edita `src/data/waste-schedule.json` con las fechas del nuevo calendario
-municipal y haz push a `main`. Se despliega solo. Si se acaban las fechas, la
-página avisa en vez de quedarse en blanco.
+municipal y haz push a `main`. Se despliega solo. Cuando quedan menos de 45 días,
+la página de Afval lo dice y un GitHub Action (`afval-kalender.yml`) abre un issue.
+Si GitHub te avisa de que ha desactivado ese workflow por inactividad, reactívalo
+en **Actions**. Si se acaban las fechas, la página avisa en vez de quedarse en blanco.
 
 **Cada pocos meses: exportar una copia.**
 En **Vriezer** y en **Voorraden**, botón ⚙︎ → **Exporteren**. Cada página descarga

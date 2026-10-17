@@ -4,13 +4,14 @@ import PageTitle from '../components/PageTitle';
 import schedule from '../data/waste-schedule.json';
 import { WASTE_TYPES } from '../data/waste-types';
 import {
+  daysBetween,
   formatDutchDate,
   formatDutchDateShort,
   formatDutchTimestamp,
   relativeDayLabel,
   todayInAmsterdam,
 } from '../lib/dates';
-import { getUpcomingCollections } from '../lib/waste';
+import { SCHEDULE_WARN_DAYS, getUpcomingCollections, lastCollectionDate } from '../lib/waste';
 import type { WasteScheduleEntry } from '../types/waste';
 
 const UPCOMING_COUNT = 4;
@@ -23,12 +24,17 @@ function afvalWebcalUrl(): string {
 
 export default function WastePage() {
   // Se calcula una vez al abrir la página: al tocar la NFC siempre es un montaje nuevo.
-  const { next, upcoming, consultedAt } = useMemo(() => {
+  const { next, upcoming, endsSoonOn, consultedAt } = useMemo(() => {
     const today = todayInAmsterdam();
-    const collections = getUpcomingCollections(schedule as WasteScheduleEntry[], today);
+    const entries = schedule as WasteScheduleEntry[];
+    const collections = getUpcomingCollections(entries, today);
+    const lastDate = lastCollectionDate(entries);
     return {
       next: collections[0],
       upcoming: collections.slice(1, 1 + UPCOMING_COUNT),
+      // Aviso con margen, antes de que la página se quede sin fechas.
+      endsSoonOn:
+        lastDate && daysBetween(today, lastDate) <= SCHEDULE_WARN_DAYS ? lastDate : null,
       consultedAt: formatDutchTimestamp(),
     };
   }, []);
@@ -76,6 +82,13 @@ export default function WastePage() {
                 ))}
               </ul>
             </section>
+          )}
+
+          {endsSoonOn && (
+            <p className="footnote">
+              De kalender loopt tot {formatDutchDate(endsSoonOn)}. Vraag Jasper om de nieuwe
+              kalender.
+            </p>
           )}
         </>
       ) : (

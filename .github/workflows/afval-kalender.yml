@@ -1,0 +1,50 @@
+name: Aviso calendario de basura
+
+# Abre un issue cuando a src/data/waste-schedule.json le quedan menos de
+# 45 días (el mismo margen que SCHEDULE_WARN_DAYS en src/lib/waste.ts).
+# Ojo: GitHub desactiva los workflows programados de un repo público tras
+# 60 días sin actividad; por eso la página de Afval también avisa.
+
+on:
+  schedule:
+    - cron: '0 8 * * 1' # los lunes a las 08:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Días que le quedan al calendario
+        id: check
+        run: |
+          node -e '
+            const schedule = require("./src/data/waste-schedule.json");
+            const last = schedule.map((entry) => entry.date).sort().at(-1);
+            const today = new Date().toISOString().slice(0, 10);
+            const left = Math.round((Date.parse(last) - Date.parse(today)) / 86_400_000);
+            console.log(`Última recogida: ${last} (quedan ${left} días)`);
+            require("node:fs").appendFileSync(process.env.GITHUB_OUTPUT, `last=${last}\nleft=${left}\n`);
+          '
+
+      - name: Abrir un issue (si no hay ya uno abierto)
+        if: ${{ fromJSON(steps.check.outputs.left) < 45 }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LAST: ${{ steps.check.outputs.last }}
+          LEFT: ${{ steps.check.outputs.left }}
+        run: |
+          title="Actualizar el calendario de basura"
+          open=$(gh issue list --state open --json title --jq "map(select(.title == \"$title\")) | length")
+          if [ "$open" -gt 0 ]; then
+            echo "Ya hay un issue abierto: no se repite."
+            exit 0
+          fi
+          gh issue create --title "$title" --body "La última recogida de \`src/data/waste-schedule.json\` es el $LAST (quedan $LEFT días).
+
+          Copia las fechas del calendario municipal del año que viene, sin olvidar la de los kerstbomen (\`kerstboom\`), y haz push a \`main\`. Ver MANUAL_STEPS.md → Mantenimiento."
