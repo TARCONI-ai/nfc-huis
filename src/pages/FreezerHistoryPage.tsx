@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchEvents, fetchLocations, type FreezerError } from '../services/freezer';
+import { fetchEvents, fetchLocations } from '../services/freezer';
+import type { InventoryError } from '../services/inventory';
 import type { FreezerEvent, FreezerLocation } from '../types/freezer';
 
 const ACTION_LABELS: Record<FreezerEvent['action'], string> = {
@@ -25,7 +26,7 @@ function formatWhen(iso: string): string {
 export default function FreezerHistoryPage() {
   const [events, setEvents] = useState<FreezerEvent[] | null>(null);
   const [locations, setLocations] = useState<FreezerLocation[]>([]);
-  const [error, setError] = useState<FreezerError | null>(null);
+  const [error, setError] = useState<InventoryError | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -36,7 +37,7 @@ export default function FreezerHistoryPage() {
         setLocations(nextLocations);
       })
       .catch((caught) => {
-        if (!cancelled) setError(caught as FreezerError);
+        if (!cancelled) setError(caught as InventoryError);
       });
     return () => {
       cancelled = true;

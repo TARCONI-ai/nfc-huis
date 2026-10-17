@@ -18,11 +18,21 @@ export function classifyError(message: string): 'offline' | 'server' {
 }
 
 /**
+ * Las filas de AFVAL (pilas, papel viejo) son cubos de reciclaje que el abuelo
+ * apunta en la despensa: siempre están "a 0" pero no hay que comprarlos.
+ */
+export function isWasteBin(item: { unit: string }): boolean {
+  return item.unit.trim().toUpperCase().startsWith('AFV');
+}
+
+/**
  * Lista de la compra: los productos a 0. Los abuelos no los borran porque así
  * el sitio en la balda queda "reservado", y eso nos sirve de lista.
  * Se ordena por cajón (como en el congelador) y luego por nombre.
  */
-export function shoppingList<T extends { location_id: string; name: string; quantity: number }>(
+export function shoppingList<
+  T extends { location_id: string; name: string; quantity: number; unit: string },
+>(
   items: readonly T[],
   locationOrder: readonly string[],
 ): T[] {
@@ -31,7 +41,7 @@ export function shoppingList<T extends { location_id: string; name: string; quan
     return index === -1 ? Number.MAX_SAFE_INTEGER : index;
   };
   return items
-    .filter((item) => item.quantity === 0)
+    .filter((item) => item.quantity === 0 && !isWasteBin(item))
     .sort(
       (a, b) => rank(a.location_id) - rank(b.location_id) || a.name.localeCompare(b.name, 'nl'),
     );

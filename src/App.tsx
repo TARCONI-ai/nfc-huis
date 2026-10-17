@@ -4,6 +4,7 @@ import WastePage from './pages/WastePage';
 import FreezerPage from './pages/FreezerPage';
 import FreezerHistoryPage from './pages/FreezerHistoryPage';
 import ShoppingPage from './pages/ShoppingPage';
+import PantryPage from './pages/PantryPage';
 
 export default function App() {
   return (
@@ -13,12 +14,14 @@ export default function App() {
         <Route path="/afval" element={<WastePage />} />
         <Route path="/vriezer" element={<FreezerPage />} />
         <Route path="/vriezer/geschiedenis" element={<FreezerHistoryPage />} />
+        <Route path="/voorraden" element={<PantryPage />} />
         <Route path="/boodschappen" element={<ShoppingPage />} />
 
         {/* Alias en castellano, por si alguna pegatina se grabó con la ruta antigua. */}
         <Route path="/basura" element={<Navigate to="/afval" replace />} />
         <Route path="/congelador" element={<Navigate to="/vriezer" replace />} />
         <Route path="/compra" element={<Navigate to="/boodschappen" replace />} />
+        <Route path="/despensa" element={<Navigate to="/voorraden" replace />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
