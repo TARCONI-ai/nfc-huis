@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import PageTitle from '../components/PageTitle';
 import schedule from '../data/waste-schedule.json';
 import { WASTE_TYPES } from '../data/waste-types';
 import {
@@ -34,7 +35,7 @@ export default function WastePage() {
 
   return (
     <main className="app">
-      <h1>🗑 Volgende ophaling</h1>
+      <PageTitle>🗑 Volgende ophaling</PageTitle>
 
       {next ? (
         <>
